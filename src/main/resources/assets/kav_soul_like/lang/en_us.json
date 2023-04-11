@@ -1,0 +1,10 @@
+{
+  "block.kav_soul_like.golden_cup": "Golden Cup",
+  "item.kav_soul_like.echo_star": "Echo Star",
+  "key.kav_soul_like.dash": "Dashing",
+  "key.category.kav_soul_like.category": "Kav Soul Like Mod",
+  "key.kav_soul_like.direction_w": "Forward Direction",
+  "key.kav_soul_like.direction_d": "Right Direction",
+  "key.kav_soul_like.direction_a": "Left Direction",
+  "key.kav_soul_like.direction_s": "Backward Direction"
+}

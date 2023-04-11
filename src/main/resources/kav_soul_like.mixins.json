@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.kav.kav_soul_like.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "ExampleMixin",
+    "ModEntityDataSaverMixin",
+    "doAttackMixin",
+    "ClientPlayerEntityMixin",
+    "PlayerAnimationExample"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

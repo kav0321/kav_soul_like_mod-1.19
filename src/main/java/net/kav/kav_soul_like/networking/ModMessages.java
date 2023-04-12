@@ -47,6 +47,7 @@ public class ModMessages
     public static final Identifier INIT = new Identifier(Kav_soul_like.MOD_ID, "maxstaminaas");
     public static final Identifier LEVELCR = new Identifier(Kav_soul_like.MOD_ID, "levelcr");
     public static final Identifier DASH = new Identifier(Kav_soul_like.MOD_ID, "dash");
+    public static final Identifier TEST = new Identifier(Kav_soul_like.MOD_ID, "test");
     public static void registerC2SPackets()
         {
         ServerPlayNetworking.registerGlobalReceiver(HANDSWING, PlayerStatsC2S::sendstats);
@@ -64,7 +65,8 @@ public class ModMessages
         ServerPlayNetworking.registerGlobalReceiver(LEVEL, PlayerStatsC2S::statslevel);
         ServerPlayNetworking.registerGlobalReceiver(INIT, PlayerStatsC2S::INITS);
         ServerPlayNetworking.registerGlobalReceiver(LEVELCR, PlayerStatsC2S::statslevelcre);
-            ServerPlayNetworking.registerGlobalReceiver(DASH, playertechServerSide::Dash);
+        ServerPlayNetworking.registerGlobalReceiver(DASH, playertechServerSide::Dash);
+        ServerPlayNetworking.registerGlobalReceiver(TEST, PlayerStatsC2S::stattest);
     }
     public static void registerS2CPackets()
     {

@@ -58,12 +58,24 @@ public class playerdeath implements ServerPlayerEvents.AfterRespawn{
         bufmax.writeFloat(maxstamina);
         bufLevelondeeznutz.writeInt(level);
 
-        newPlayer.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(oldPlayer.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getValue());
-        newPlayer.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_SPEED).setBaseValue(oldPlayer.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_SPEED).getValue());
-        newPlayer.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(oldPlayer.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).getValue());
-        newPlayer.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(oldPlayer.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE).getValue());
-        newPlayer.getAttributeInstance(EntityAttributes.GENERIC_ARMOR).setBaseValue(oldPlayer.getAttributeInstance(EntityAttributes.GENERIC_ARMOR).getValue());
-        newPlayer.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(oldPlayer.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).getValue());
+
+        double f=HeartData.heartlevelbase(((IEntityDataSaver) oldPlayer),health);
+
+        newPlayer.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(f);
+
+
+        double f22= StrengthData.strengthleveltobase(((IEntityDataSaver) oldPlayer),str);
+        newPlayer.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(f22);
+
+
+        double f1=AgilityData.Agilitylevel_base_attack(((IEntityDataSaver) oldPlayer),agility);
+        double f2=AgilityData.Agilitylevel_base_move(((IEntityDataSaver) oldPlayer),agility);
+        newPlayer.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_SPEED).setBaseValue(f1);
+        newPlayer.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(f2);
+        double f122=DefenceData.DefenceLevelKnockbackResistance(((IEntityDataSaver) oldPlayer),Defence);
+        double f222=DefenceData.DefenceLevelArmor(((IEntityDataSaver) oldPlayer),Defence);
+        newPlayer.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(f122);
+        newPlayer.getAttributeInstance(EntityAttributes.GENERIC_ARMOR).setBaseValue(f222);
 
 
         ServerPlayNetworking.send(newPlayer, ModMessages.HEALTHC,bufxheartD);

@@ -39,6 +39,7 @@ public class KeyInputHandler {
             if(client.player!=null)
             {
 
+
                 if(dashingkey.isPressed() && tick==0 && StaminaData.addPoints(((IEntityDataSaver) MinecraftClient.getInstance().player), 0, "Stamina")>1){
 
                     if(pow(pow(MinecraftClient.getInstance().player.getVelocity().x,2)+pow(MinecraftClient.getInstance().player.getVelocity().y,2)+pow(MinecraftClient.getInstance().player.getVelocity().z,2),0.5)>=0.1)
@@ -74,6 +75,24 @@ public class KeyInputHandler {
                         zdd=(arr[1]*0.2)/10000;
                     }
 
+
+
+                    if (AgilityData.getAgility(((IEntityDataSaver) MinecraftClient.getInstance().player)) < 10)
+                    {
+                        MinecraftClient.getInstance().player.setVelocity(new Vec3d(xd * 1.1, 0, zd * 1.1));
+                    }
+                    else if(AgilityData.getAgility(((IEntityDataSaver) MinecraftClient.getInstance().player)) >= 10 && AgilityData.getAgility(((IEntityDataSaver) MinecraftClient.getInstance().player)) < 20)
+                    {
+                        MinecraftClient.getInstance().player.setVelocity(new Vec3d(xd * 1.2, 0, zd * 1.2));
+                    }
+                    else if(AgilityData.getAgility(((IEntityDataSaver) MinecraftClient.getInstance().player)) >= 20 && AgilityData.getAgility(((IEntityDataSaver) MinecraftClient.getInstance().player)) < 30)
+                    {
+                        MinecraftClient.getInstance().player.setVelocity(new Vec3d(xd * 1.3, 0, zd * 1.3));
+                    }
+                    else
+                    {
+                        MinecraftClient.getInstance().player.setVelocity(new Vec3d(xd*1.4,0,zd*1.4));
+                    }
                     MinecraftClient.getInstance().player.setVelocity(new Vec3d(xdd*1.5,0,zdd*1.5));
 
                     ClientPlayNetworking.send(ModMessages.DASH,buf);
@@ -102,7 +121,6 @@ public class KeyInputHandler {
                 GLFW.GLFW_KEY_LEFT_ALT,
                 KEY_CATEGORY_KAV_SOUL
         ));
-
 
 
 

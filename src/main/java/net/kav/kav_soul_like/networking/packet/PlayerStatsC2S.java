@@ -81,7 +81,7 @@ public class PlayerStatsC2S
         int health= HeartData.getHeart(((IEntityDataSaver) player));
         int agility= AgilityData.getAgility(((IEntityDataSaver) player));
         int staminal= StaminaLevelData.getStaminaL(((IEntityDataSaver) player));
-
+        int Defence=DefenceData.getDefence(((IEntityDataSaver) player));
         int Level=LevelData.getLevel(((IEntityDataSaver) player));
 
 
@@ -111,6 +111,29 @@ public class PlayerStatsC2S
             PacketByteBuf bufmax= PacketByteBufs.create();
             bufmax.writeFloat(((IEntityDataSaver) player).getPersistentData().getFloat("MaxStamina"));
             ServerPlayNetworking.send(player,ModMessages.MAXSTAMINA,bufmax);
+
+
+
+
+
+
+        double f=HeartData.heartlevelbase(((IEntityDataSaver) player),health);
+
+        player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(f);
+
+
+        double f22= StrengthData.strengthleveltobase(((IEntityDataSaver) player),str);
+        player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(f22);
+
+
+        double f1=AgilityData.Agilitylevel_base_attack(((IEntityDataSaver) player),agility);
+        double f2=AgilityData.Agilitylevel_base_move(((IEntityDataSaver) player),agility);
+        player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_SPEED).setBaseValue(f1);
+        player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(f2);
+        double f122=DefenceData.DefenceLevelKnockbackResistance(((IEntityDataSaver) player),Defence);
+        double f222=DefenceData.DefenceLevelArmor(((IEntityDataSaver) player),Defence);
+        player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(f122);
+        player.getAttributeInstance(EntityAttributes.GENERIC_ARMOR).setBaseValue(f222);
 
 
     }
@@ -147,40 +170,27 @@ public class PlayerStatsC2S
 
 
         HeartData.increaseHeart(((IEntityDataSaver) player),1);
-        player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).getValue()+1);
+        int x=HeartData.getHeart(((IEntityDataSaver) player));
+        double f=HeartData.heartlevelbase(((IEntityDataSaver) player),x);
+        player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(f);
 
     }
+    public static void stattest(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+    {
 
+
+        player.getAttributeInstance(EntityAttributes.GENERIC_ARMOR).setBaseValue(1);
+    }
     public static void statssttack(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
     {
 
 
 
-
-        if(StrengthData.getstrength(((IEntityDataSaver) player))>=10)
-        {
-            player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getValue()+0.1);
-        }
-        else if(StrengthData.getstrength(((IEntityDataSaver) player))>=20)
-        {
-            player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getValue()+0.05);
-
-        }
-        else if(StrengthData.getstrength(((IEntityDataSaver) player))>=30)
-        {
-            player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getValue()+0.01);
-
-        }
-        else if(StrengthData.getstrength(((IEntityDataSaver) player))>=40)
-        {
-            player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getValue()+0.001);
-
-        }
-        else
-        {
             StrengthData.increasestrength(((IEntityDataSaver) player),1);
-            player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).getValue()+0.5);
-        }
+            int x=StrengthData.getstrength(((IEntityDataSaver) player));
+            double f= StrengthData.strengthleveltobase(((IEntityDataSaver) player),x);
+            player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(f);
+
 
     }
 
@@ -188,8 +198,11 @@ public class PlayerStatsC2S
     {
 
         AgilityData.increaseAgility(((IEntityDataSaver) player),1);
-        player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_SPEED).setBaseValue(player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_SPEED).getValue()+0.1);
-        player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).getValue()+0.01);
+        int x1= AgilityData.getAgility(((IEntityDataSaver) player));
+        double f1=AgilityData.Agilitylevel_base_attack(((IEntityDataSaver) player),x1);
+        double f2=AgilityData.Agilitylevel_base_move(((IEntityDataSaver) player),x1);
+        player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_SPEED).setBaseValue(f1);
+        player.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(f2);
     }
 
     public static void statsstaminal(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
@@ -204,8 +217,11 @@ public class PlayerStatsC2S
     public static void statsdefence(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
     {
         DefenceData.increaseDefence(((IEntityDataSaver) player),1);
-        player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE).getValue()+0.1f);
-        player.getAttributeInstance(EntityAttributes.GENERIC_ARMOR).setBaseValue(player.getAttributeInstance(EntityAttributes.GENERIC_ARMOR).getValue()+1);
+        int x1=DefenceData.getDefence(((IEntityDataSaver) player));
+        double f1=DefenceData.DefenceLevelKnockbackResistance(((IEntityDataSaver) player),x1);
+        double f2=DefenceData.DefenceLevelArmor(((IEntityDataSaver) player),x1);
+        player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(f1);
+        player.getAttributeInstance(EntityAttributes.GENERIC_ARMOR).setBaseValue(f2);
     }
 
     public static void statslevel(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)

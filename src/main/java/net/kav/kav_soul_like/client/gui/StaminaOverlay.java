@@ -10,6 +10,8 @@ import net.kav.kav_soul_like.util.IEntityDataSaver;
 import net.kav.kav_soul_like.util.StaminaData;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.screen.ChatScreen;
+import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -20,7 +22,6 @@ public class StaminaOverlay
     /*Identifiers for the Stamina to display*/
     private static final Identifier Stamina_StartFull= new Identifier(Kav_soul_like.MOD_ID,"textures/gui/stamina/stamina_full.png");
     private static final Identifier Stamina_StartEmpty= new Identifier(Kav_soul_like.MOD_ID,"textures/gui/stamina/stamina_empty.png");
-
 
     @Override
     public void onHudRender(MatrixStack matrixStack, float tickDelta) {
@@ -40,6 +41,10 @@ public class StaminaOverlay
 
 
         //Stamina Bar
+
+
+
+
         this.StaminaBar(matrixStack,tickDelta,client,x,y);
     }
 
@@ -47,17 +52,24 @@ public class StaminaOverlay
 
     private void draw(Identifier identifier,MatrixStack matrixStack,int x, int y, int x1, int y1, int v)
     {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
-        RenderSystem.setShaderTexture(0, identifier);
-        DrawableHelper.drawTexture(matrixStack,x-x1,y-y1,0,0,v,42,5,42,35);
+
+
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
+            RenderSystem.setShaderTexture(0, identifier);
+            DrawableHelper.drawTexture(matrixStack,x-x1,y-y1,0,0,v,42,5,42,35);
+
+
     }
     private void draw(Identifier identifier,MatrixStack matrixStack,int x, int y, int x1, int y1, int v,int width)
     {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
-        RenderSystem.setShaderTexture(0, identifier);
-        DrawableHelper.drawTexture(matrixStack,x-x1,y-y1,0,0,v,width,5,42,35);
+
+
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderTexture(0, identifier);
+            DrawableHelper.drawTexture(matrixStack, x - x1, y - y1, 0, 0, v, width, 5, 42, 35);
+
     }
 
     private void StaminaBar(MatrixStack matrixStack,float tickDelta,MinecraftClient client, int x, int y)

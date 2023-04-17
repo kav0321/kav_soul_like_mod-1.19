@@ -77,7 +77,7 @@ public class playerdeath implements ServerPlayerEvents.AfterRespawn{
         newPlayer.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(f122);
         newPlayer.getAttributeInstance(EntityAttributes.GENERIC_ARMOR).setBaseValue(f222);
 
-
+        newPlayer.setHealth((float) newPlayer.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).getBaseValue());
         ServerPlayNetworking.send(newPlayer, ModMessages.HEALTHC,bufxheartD);
         ServerPlayNetworking.send(newPlayer,ModMessages.STRENGTHC,bufstrD);
         ServerPlayNetworking.send(newPlayer,ModMessages.AGILITYC,bufagilityD);

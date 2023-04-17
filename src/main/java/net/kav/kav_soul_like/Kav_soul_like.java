@@ -2,12 +2,13 @@ package net.kav.kav_soul_like;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.kav.kav_soul_like.Items.ModItems;
 import net.kav.kav_soul_like.block.ModBlocks;
+import net.kav.kav_soul_like.command.Levelsetcommand;
 import net.kav.kav_soul_like.config.ModConfigs;
 import net.kav.kav_soul_like.event.playerdeath;
 import net.kav.kav_soul_like.networking.ModMessages;
+import net.kav.kav_soul_like.util.ModRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,7 @@ public class Kav_soul_like implements ModInitializer {
 		ModConfigs.registerConfigs();
 		ModBlocks.registerModBlocks();
 		ModItems.registerModItems();
+		ModRegistries.INIT();
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.

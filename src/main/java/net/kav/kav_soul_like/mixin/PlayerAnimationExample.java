@@ -3,12 +3,19 @@ import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.kav.kav_soul_like.Kav_soul_like;
+
+import net.kav.kav_soul_like.networking.packet.Packets;
+
 import net.kav.kav_soul_like.util.IExampleAnimatedPlayer;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
@@ -33,16 +40,13 @@ public class PlayerAnimationExample {
                 //Use setAnimation to set the current animation. It will be played automatically.
                 KeyframeAnimation anim = PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, "waving"));
 
-                // Requested API, disable parts of animation.
-                // Following code disables the left leg (since API 0.4.0)
-                var builder = anim.mutableCopy();
-                var part = builder.getPart("leftLeg");
-                part.setEnabled(false);
 
-                // done modifying rules
-                anim = builder.build();
 
-                animationContainer.setAnimation(new KeyframeAnimationPlayer(anim));
+
+                //ClientPlayNetworking.send(ModMessages.WAVING,);
+                ClientPlayNetworking.send(
+                        Packets.TechicAnimation.ID,
+                        new Packets.TechicAnimation(MinecraftClient.getInstance().player.getId(), "waving").write());
 
                 //Use animationContainer.replaceAnimationWithFade(); to create fading effects instead of sudden changes.
             }
@@ -51,4 +55,6 @@ public class PlayerAnimationExample {
         // For server-side animation playing, implement your own plugin channel or see Emotecraft API
         // https://github.com/KosmX/emotes/tree/dev/emotesAPI/src/main/java/io/github/kosmx/emotes/api/events
     }
+
+
 }

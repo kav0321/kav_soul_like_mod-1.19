@@ -11,6 +11,7 @@
     "doAttackMixin",
     "ClientPlayerEntityMixin",
     "PlayerAnimationExample"
+
   ],
   "injectors": {
     "defaultRequire": 1

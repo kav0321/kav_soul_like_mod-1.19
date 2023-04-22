@@ -12,6 +12,9 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.kav.kav_soul_like.Kav_soul_like;
+import net.kav.kav_soul_like.client.gui.LevelUpGui;
+import net.kav.kav_soul_like.client.gui.LevelUpScreen;
+import net.kav.kav_soul_like.config.ModConfigs;
 import net.kav.kav_soul_like.event.ClientStamina;
 import net.kav.kav_soul_like.networking.packet.Packets;
 import net.kav.kav_soul_like.networking.packet.PlayerStatsC2S;
@@ -19,13 +22,19 @@ import net.kav.kav_soul_like.networking.packet.direction;
 import net.kav.kav_soul_like.networking.packet.playertechServerSide;
 import net.kav.kav_soul_like.util.*;
 
+import net.kav.kav_soul_like.util.item_requirement.weapon_req;
 import net.kav.kav_soul_like.util.modifier.TransmissionSpeedModifier;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonSerializing;
+
+import java.util.ArrayList;
 
 public class ModMessages
 {
@@ -63,8 +72,9 @@ public class ModMessages
     public static final Identifier LEVELCR = new Identifier(Kav_soul_like.MOD_ID, "levelcr");
     public static final Identifier DASH = new Identifier(Kav_soul_like.MOD_ID, "dash");
     public static final Identifier TEST = new Identifier(Kav_soul_like.MOD_ID, "test");
-
-    public static final Identifier WAVING = new Identifier(Kav_soul_like.MOD_ID,"waving_i");
+    public static  final  Identifier Screen = new Identifier(Kav_soul_like.MOD_ID,"screen");
+    public static final Identifier ITEM = new Identifier(Kav_soul_like.MOD_ID,"items");
+    public static final Identifier SHIELD = new Identifier(Kav_soul_like.MOD_ID,"shield");
 
     public static Boolean t=false;
     public static Boolean t2=false;
@@ -141,6 +151,60 @@ public class ModMessages
     }
     public static void registerS2CPackets()
     {
+
+        ClientPlayNetworking.registerGlobalReceiver(SHIELD, (client, handler, buf, sender) -> {
+
+           if(StaminaData.addPoints(((IEntityDataSaver) client.player),0,"Stamina")<2)
+           {
+               client.player.disableShield(false);
+           }
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(Packets.level_up_maths_strength.ID, (client, handler, buf, sender) -> {
+            final var packet = Packets.level_up_maths_strength.read(buf);
+            ModConfigs.Ks = packet.Ks();
+            ModConfigs.Ms=packet.Ms();
+
+           // System.out.println( ModConfigs.Ks+" "+ModConfigs.Ms);
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(Packets.level_up_maths_heart.ID, (client, handler, buf, sender) -> {
+            final var packets1 = Packets.level_up_maths_heart.read(buf);
+            ModConfigs.Kh=packets1.Kh();
+            ModConfigs.Mh=packets1.Mh();
+            ModConfigs.Lh=packets1.Lh();
+           // System.out.println(ModConfigs.Kh+" "+ModConfigs.Mh+" "+ModConfigs.Lh);
+        });
+        ClientPlayNetworking.registerGlobalReceiver(Packets.level_up_maths_agility.ID, (client, handler, buf, sender) -> {
+            final var packets2 = Packets.level_up_maths_agility.read(buf);
+            ModConfigs.Ka_m=packets2.Ka_m();
+            ModConfigs.Ma_m=packets2.Ma_m();
+            ModConfigs.Ka_s= packets2.Ka_s();
+            ModConfigs.Ma_s=packets2.Ma_s();
+            ModConfigs.La_s=packets2.La_s();
+          //  System.out.println(ModConfigs.Ka_m+" "+ModConfigs.Ma_m+" "+ModConfigs.Ka_s+" "+ModConfigs.Ma_s+" "+ModConfigs.La_s);
+        });
+        ClientPlayNetworking.registerGlobalReceiver(Packets.level_up_maths_defence.ID, (client, handler, buf, sender) -> {
+            final var packets3 = Packets.level_up_maths_defence.read(buf);
+            ModConfigs.Kd_k= packets3.Kd_k();
+            ModConfigs.Md_k= packets3.Md_k();
+            ModConfigs.Ld_k= packets3.Ld_k();
+            ModConfigs.Kd_r= packets3.Kd_r();
+            ModConfigs.Md_r= packets3.Md_r();
+            ModConfigs.Jd_r=packets3.Jd_r();
+            ModConfigs.Ld_r= packets3.Ld_r();
+
+          //  System.out.println(ModConfigs.Kd_k+" "+ModConfigs.Md_k+" "+ModConfigs.Ld_k+" "+ModConfigs.Kd_r+" "+ModConfigs.Md_r+" "+ModConfigs.Jd_r+" "+ModConfigs.Ld_r);
+        });
+
+
+
+
+        ClientPlayNetworking.registerGlobalReceiver(ITEM, (client, handler, buf, sender) -> {
+            final var packet = Packets.Stats_item.read(buf);
+            System.out.println(packet.name());
+           weapon_req.add(packet.name(),packet.cat(),packet.str(),packet.health(),packet.agility(),packet.stamina(),packet.defence(),packet.magic());
+        });
         ClientPlayNetworking.registerGlobalReceiver(Packets.Stats.ID, (client, handler, buf, respondSender) ->
         {
             final var packet = Packets.Stats.read(buf);
@@ -208,7 +272,7 @@ public class ModMessages
                         var animationContainer = ((IExampleAnimatedPlayer) entity).modid_getModAnimation();
                         KeyframeAnimation animationL =  PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, packet.animationName()));
                         ModifierLayer base = new ModifierLayer(null);
-
+                        KeyframeAnimation nulls =  PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, "null"));
 
 
                         var builder = animationL.mutableCopy();
@@ -227,7 +291,7 @@ public class ModMessages
 
                         if(t==false)
                         {
-                            speedS.speed=1.5f;
+                            speedS.speed=1f;
                             t=true;
                         }
 
@@ -236,12 +300,14 @@ public class ModMessages
 
                         animationContainer.setAnimation(new KeyframeAnimationPlayer(animationL));
                         animationContainer.addModifier(speedS,0);
+
                     }
                     else if(packet.direction()==direction.RIGHT.getint())
                     {
                         var animationContainer2 = ((IExampleAnimatedPlayer) entity).modid_getModAnimation();
                         System.out.println(packet.direction());
                         KeyframeAnimation animation =  PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, "dashing_right"));
+                        KeyframeAnimation nulls =  PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, "null"));
                         ModifierLayer base = new ModifierLayer(null);
 
 
@@ -264,16 +330,58 @@ public class ModMessages
 
                         if(t2==false)
                         {
-                            speedSS.speed=1.5f;
+                            speedSS.speed=0.8f;
                             t2=true;
                         }
 
 
 
                         animationContainer2.setAnimation(new KeyframeAnimationPlayer(animation));
+
+                        animationContainer2.addModifier(speedSS,0);
+
+
+                    }
+                    else
+                    {
+                        var animationContainer2 = ((IExampleAnimatedPlayer) entity).modid_getModAnimation();
+                        System.out.println(packet.direction()+"s "+ packet.animationName());
+                        KeyframeAnimation animation =  PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, packet.animationName()));
+                        KeyframeAnimation nulls =  PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, "null"));
+                        ModifierLayer base = new ModifierLayer(null);
+
+
+
+                        var builder = animation.mutableCopy();
+                        var part = builder.getPart("head");
+                        part.setEnabled(false);
+
+
+
+                        animation = builder.build();
+
+
+
+                        TransmissionSpeedModifier speedSS= new TransmissionSpeedModifier();
+                        if(t2==true)
+                        {
+                            speedSS.speed=1;
+                        }
+
+                        if(t2==false)
+                        {
+                            speedSS.speed=0.8f;
+                            t2=true;
+                        }
+
+
+
+                        animationContainer2.setAnimation(new KeyframeAnimationPlayer(animation));
+
                         animationContainer2.addModifier(speedSS,0);
 
                     }
+
 
 
 
@@ -417,7 +525,14 @@ public class ModMessages
 
 
 
+    }
+    private static void executeListPacketname(PacketByteBuf buf, ClientPlayerEntity player) {
+
 
     }
+
+
+
+
     }
 

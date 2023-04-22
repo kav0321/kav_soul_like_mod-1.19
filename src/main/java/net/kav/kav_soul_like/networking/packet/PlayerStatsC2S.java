@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.kav.kav_soul_like.Kav_soul_like;
 import net.kav.kav_soul_like.config.ModConfigs;
 import net.kav.kav_soul_like.networking.ModMessages;
 import net.kav.kav_soul_like.util.*;
@@ -15,6 +16,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -54,6 +56,17 @@ public class PlayerStatsC2S
             ServerPlayNetworking.send(player, ModMessages.DEFENCEC,bufdefences);
         }
 
+
+
+
+        ItemsPacket.writeS2CItemsList(player);
+
+        ServerPlayNetworking.send(player,Packets.level_up_maths_strength.ID,new Packets.level_up_maths_strength(ModConfigs.Ks,ModConfigs.Ms).write());
+        ServerPlayNetworking.send(player,Packets.level_up_maths_heart.ID,new Packets.level_up_maths_heart(ModConfigs.Kh,ModConfigs.Mh,ModConfigs.Lh).write());
+        System.out.println(ModConfigs.Ka_m);
+        ServerPlayNetworking.send(player,Packets.level_up_maths_agility.ID,new Packets.level_up_maths_agility(ModConfigs.Ka_m,ModConfigs.Ma_m,ModConfigs.Ka_s,ModConfigs.Ma_s,ModConfigs.La_s).write());
+
+        ServerPlayNetworking.send(player,Packets.level_up_maths_defence.ID,new Packets.level_up_maths_defence(ModConfigs.Kd_k,ModConfigs.Md_k,ModConfigs.Ld_k,ModConfigs.Kd_r,ModConfigs.Md_r,ModConfigs.Jd_r,ModConfigs.Ld_r).write());
     }
     public static void INIT(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
     {
@@ -74,6 +87,7 @@ public class PlayerStatsC2S
 
         bufx.writeInt(ModConfigs.X);
         bufy.writeInt(ModConfigs.Y);
+
         bufr.writeFloat(((IEntityDataSaver) player).getPersistentData().getFloat("recoveryrate"));
 
 
@@ -140,10 +154,14 @@ public class PlayerStatsC2S
 
     public static void getlowsta(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
     {
-        String xa= buf.readString();
+      if(buf.readBoolean())
+      {
+          player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,20,2));
+          player.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE,20,2));
+      }
 
 
-        player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,20,100));
+        player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,20,10));
     }
     public static void getMaxSta(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
     {

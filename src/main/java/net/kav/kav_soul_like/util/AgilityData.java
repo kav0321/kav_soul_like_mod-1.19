@@ -1,5 +1,6 @@
 package net.kav.kav_soul_like.util;
 
+import net.kav.kav_soul_like.config.ModConfigs;
 import net.minecraft.nbt.NbtCompound;
 
 import static java.lang.Math.pow;
@@ -16,7 +17,9 @@ public class AgilityData {
     public static int getAgility(IEntityDataSaver player)
     {
         NbtCompound nbt = player.getPersistentData();
+
         Agility=nbt.getInt("Agility");
+
         return Agility;
     }
 
@@ -39,10 +42,10 @@ public class AgilityData {
 
     public static double Agilitylevel_base_move(IEntityDataSaver player, int amount)
     {
-        return 0.000798427353378238*(amount+1)+0.0992703768017564;
+        return ModConfigs.Ka_m *(amount+1)+ModConfigs.Ma_m;
     }
     public static double Agilitylevel_base_attack(IEntityDataSaver player, int amount)
     {
-        return 0.0104010957232309*pow(amount,1.18927368957711)+3.98835849955021;
+        return ModConfigs.Ka_s*pow(amount,ModConfigs.Ma_s)+ModConfigs.La_s;
     }
 }

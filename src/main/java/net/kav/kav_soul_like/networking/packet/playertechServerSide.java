@@ -25,7 +25,7 @@ public class playertechServerSide {
         zd = (zd) / 100000;
 
         player.setMovementSpeed(1000);
-        MinecraftClient.getInstance().player.setSprinting(true);
+        //MinecraftClient.getInstance().player.setSprinting(true);
         if (AgilityData.getAgility(((IEntityDataSaver) player)) < 10)
         {
             player.setVelocity(new Vec3d(xd * 1.1, 0, zd * 1.1));

@@ -1,0 +1,10 @@
+{
+  "category": "weapon",
+  "name": "minecraft:crossbow",
+  "strength": 2,
+  "health": 0,
+  "agility": 8,
+  "stamina": 0,
+  "defence": 0,
+  "magic": 0
+}

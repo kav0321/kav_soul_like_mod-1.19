@@ -1,5 +1,6 @@
 package net.kav.kav_soul_like.util;
 
+import net.kav.kav_soul_like.config.ModConfigs;
 import net.minecraft.nbt.NbtCompound;
 
 import static java.lang.Math.pow;
@@ -45,6 +46,6 @@ public class StrengthData {
         {
             return 1;
         }
-        return 2.25007537562693*pow(amount,0.401337607480491);
+        return ModConfigs.Ks *pow(amount,ModConfigs.Ms);
     }
 }

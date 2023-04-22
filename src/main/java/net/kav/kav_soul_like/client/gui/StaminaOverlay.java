@@ -16,7 +16,7 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
-@Environment(EnvType.CLIENT)
+
 public class StaminaOverlay
         implements HudRenderCallback {
     /*Identifiers for the Stamina to display*/
@@ -68,6 +68,7 @@ public class StaminaOverlay
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             RenderSystem.setShaderTexture(0, identifier);
+
             DrawableHelper.drawTexture(matrixStack, x - x1, y - y1, 0, 0, v, width, 5, 42, 35);
 
     }

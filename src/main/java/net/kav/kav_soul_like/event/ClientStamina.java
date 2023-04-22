@@ -11,6 +11,8 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 
+import static net.kav.kav_soul_like.event.KeyInputHandler.dashingkey;
+
 public class ClientStamina implements ClientTickEvents.EndWorldTick{
     int x1 = 0;
     int y = 0;
@@ -34,7 +36,7 @@ public class ClientStamina implements ClientTickEvents.EndWorldTick{
 
         }
 
-        if (MinecraftClient.getInstance().player.handSwinging == false && x1==9&& MinecraftClient.getInstance().player.isSprinting()==false&&AttackOveride.getCon()==false) {
+        if (MinecraftClient.getInstance().player.handSwinging == false && x1==9&& MinecraftClient.getInstance().player.isSprinting()==false&&AttackOveride.getCon()==false &&!dashingkey.isPressed() && !MinecraftClient.getInstance().player.isBlocking() && !MinecraftClient.getInstance().player.isUsingItem()) {
 
            float re=StaminaData.recoveryratetag(((IEntityDataSaver) MinecraftClient.getInstance().player));
 
@@ -43,9 +45,10 @@ public class ClientStamina implements ClientTickEvents.EndWorldTick{
             //MinecraftClient.getInstance().player.sendMessage(Text.literal(Float.toString(x)));
             if(x<1)
             {
-                PacketByteBuf buff= PacketByteBufs.create();
+                PacketByteBuf buff =PacketByteBufs.create();
+                buff.writeBoolean(false);
 
-                buff.writeString(MinecraftClient.getInstance().player.getName().getString());
+
 
                 ClientPlayNetworking.send(ModMessages.LOWSTA, buff);
 

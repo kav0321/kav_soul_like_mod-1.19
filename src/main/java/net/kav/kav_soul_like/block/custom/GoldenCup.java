@@ -1,7 +1,12 @@
 package net.kav.kav_soul_like.block.custom;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.kav.kav_soul_like.client.gui.LevelUpGui;
 import net.kav.kav_soul_like.client.gui.LevelUpScreen;
+import net.kav.kav_soul_like.networking.ModMessages;
+import net.kav.kav_soul_like.util.DisplayLevel;
 import net.minecraft.block.*;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -70,10 +75,10 @@ public class GoldenCup extends HorizontalFacingBlock {
         if (state.get(CHARGES) == 0) {
             return ActionResult.PASS;
         }
-
+//
         if(world.isClient)
         {
-            MinecraftClient.getInstance().setScreen(new LevelUpScreen(new LevelUpGui()));
+            DisplayLevel.Gui();
         }
 
 

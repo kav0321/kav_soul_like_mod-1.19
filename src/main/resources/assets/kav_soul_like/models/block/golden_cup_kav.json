@@ -3,9 +3,9 @@
 	"parent": "block/block",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "kav_soul_like:block/golden_cup",
+		"0": "kav_soul_like:block/golden_cup_kav",
 		"1": "kav_soul_like:block/golden_cup_fire",
-		"particle": "kav_soul_like:block/golden_cup"
+		"particle": "kav_soul_like:block/golden_cup_kav"
 	},
 	"elements": [
 		{

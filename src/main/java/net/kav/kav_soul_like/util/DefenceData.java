@@ -1,5 +1,6 @@
 package net.kav.kav_soul_like.util;
 
+import net.kav.kav_soul_like.config.ModConfigs;
 import net.minecraft.nbt.NbtCompound;
 
 import static java.lang.Math.pow;
@@ -38,19 +39,19 @@ public class DefenceData {
     }
     public static double DefenceLevelKnockbackResistance(IEntityDataSaver player,int amount)
     {
-        if(amount>74)
+        if(amount>ModConfigs.Ld_k)
         {
-            return 0.5032;
+            return ModConfigs.Md_k;
         }
         else
         {
-            return 0.0068*amount;
+            return ModConfigs.Kd_k *amount;
         }
 
     }
 
     public static double DefenceLevelArmor(IEntityDataSaver player,int amount)
     {
-        return -4000*pow(amount+20,-2)+10;
+        return ModConfigs.Kd_r*pow(amount+ModConfigs.Jd_r,ModConfigs.Md_r)+ModConfigs.Ld_r;
     }
 }

@@ -1,5 +1,6 @@
 package net.kav.kav_soul_like.util;
 
+import net.kav.kav_soul_like.config.ModConfigs;
 import net.minecraft.nbt.NbtCompound;
 
 import static java.lang.Math.pow;
@@ -39,6 +40,6 @@ public class HeartData {
 
     public static double heartlevelbase(IEntityDataSaver player, int amount)
     {
-        return -922.835251414047*pow(amount+1,-0.00595021874968786)+939.828724828382;
+        return ModConfigs.Kh*pow(amount+1,ModConfigs.Mh)+ModConfigs.Lh;
     }
 }

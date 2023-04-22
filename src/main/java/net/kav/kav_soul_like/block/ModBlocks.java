@@ -20,7 +20,7 @@ import java.util.function.ToIntFunction;
 
 public class ModBlocks {
 
-    public static final Block GOLDEN_CUP = registerBlock("golden_cup",
+    public static final Block GOLDEN_CUP = registerBlock("golden_cup_kav",
             new GoldenCup(FabricBlockSettings.of(Material.METAL).strength(4f).requiresTool().luminance(createLightLevelFromLitBlockState(15)).nonOpaque()), ItemGroup.MISC);
 
 

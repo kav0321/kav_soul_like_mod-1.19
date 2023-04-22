@@ -15,12 +15,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.pow;
+import static java.lang.Math.*;
 
 public class KeyInputHandler {
 
@@ -35,6 +35,7 @@ public class KeyInputHandler {
     public static KeyBinding dashingkey;
 
     private static int tick=20;
+    private static boolean right_arm;
     public static void registerKeyInputs(){
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
         tick--;
@@ -47,15 +48,19 @@ public class KeyInputHandler {
 
 
                 if(dashingkey.isPressed() && ((tick==0 && StaminaData.addPoints(((IEntityDataSaver) MinecraftClient.getInstance().player), 0, "Stamina")>1))){
-
+                if(MinecraftClient.getInstance().player.getMainArm()== Arm.RIGHT)
+                {
+                    right_arm=true;
+                }
+                    System.out.println(MinecraftClient.getInstance().player.getVelocity().getY());
                     if(pow(pow(MinecraftClient.getInstance().player.getVelocity().x,2)+pow(MinecraftClient.getInstance().player.getVelocity().y,2)+pow(MinecraftClient.getInstance().player.getVelocity().z,2),0.5)>=0.1 && !MinecraftClient.getInstance().player.isCreative())
                     {
-                        StaminaData.removePoints(((IEntityDataSaver) MinecraftClient.getInstance().player), 3, "Stamina");
+                        StaminaData.removePoints(((IEntityDataSaver) MinecraftClient.getInstance().player), 8, "Stamina");
 
                     }
 
                    // MinecraftClient.getInstance().player.setVelocity(5,0,0);
-                    MinecraftClient.getInstance().player.setSprinting(true);
+                   // MinecraftClient.getInstance().player.setSprinting(true);
                     PacketByteBuf buf =PacketByteBufs.create();
                     double x= MinecraftClient.getInstance().player.getVelocity().getX();
                     double z=MinecraftClient.getInstance().player.getVelocity().getZ();
@@ -72,7 +77,7 @@ public class KeyInputHandler {
 
                     double xdd=(arr[0])/100000;
                     double zdd=(arr[1])/100000;
-                    MinecraftClient.getInstance().player.setMovementSpeed(1000);
+                    //MinecraftClient.getInstance().player.setMovementSpeed(1000);
 
                     //System.out.println(x+" "+z);
                     if((abs(x)<0.1&&abs(z)<0.1))
@@ -81,40 +86,55 @@ public class KeyInputHandler {
                         zdd=(arr[1]*0.2)/10000;
                     }
 
+                    double alpha = 0;
+                    double atan = atan(abs(xdd / zdd));
+                    if(xdd>=0 && zdd>=0)
+                    {
+                        alpha=2*PI- atan;
+                    }
+                    else if(xdd<0&& zdd>=0)
+                    {
+                        alpha= atan;
+                    }
+                    else if(xdd<0&& zdd<0)
+                    {
+                        alpha=PI- atan;
+                    }
+                    else if(xdd>=0&& zdd<0)
+                    {
+                        alpha=PI+ atan;
+                    }
+                    double xfinal=2*sin(-alpha);
+                    double zfinal=2*cos(-alpha);
+                    
+                    //System.out.println(alpha*360/(2*PI)+" alpha "+xdd+" xdd1 "+ zdd+" zdd1 "+xdd/zdd);
 
-
-                    if (AgilityData.getAgility(((IEntityDataSaver) MinecraftClient.getInstance().player)) < 10)
+                    if(abs(xdd)<=0.5)
                     {
-                        MinecraftClient.getInstance().player.setVelocity(new Vec3d(xd * 1.1, 0, zd * 1.1));
+                        xfinal=xdd;
                     }
-                    else if(AgilityData.getAgility(((IEntityDataSaver) MinecraftClient.getInstance().player)) >= 10 && AgilityData.getAgility(((IEntityDataSaver) MinecraftClient.getInstance().player)) < 20)
+                    if(abs(zdd)<0.5)
                     {
-                        MinecraftClient.getInstance().player.setVelocity(new Vec3d(xd * 1.2, 0, zd * 1.2));
+                        zfinal=zdd;
                     }
-                    else if(AgilityData.getAgility(((IEntityDataSaver) MinecraftClient.getInstance().player)) >= 20 && AgilityData.getAgility(((IEntityDataSaver) MinecraftClient.getInstance().player)) < 30)
-                    {
-                        MinecraftClient.getInstance().player.setVelocity(new Vec3d(xd * 1.3, 0, zd * 1.3));
-                    }
-                    else
-                    {
-                        MinecraftClient.getInstance().player.setVelocity(new Vec3d(xd*1.4,0,zd*1.4));
-                    }
-                    MinecraftClient.getInstance().player.setVelocity(new Vec3d(xdd*1.5,0,zdd*1.5));
+                   // System.out.println(alpha*360/(2*PI)+" alpha "+xfinal+" xdd2 "+ zfinal+" zdd2 "+xfinal/zfinal);
+                    MinecraftClient.getInstance().player.setVelocity(new Vec3d(xfinal,0,zfinal));
+                    //MinecraftClient.getInstance().player.setVelocity(new Vec3d(xdd*1.5,0,zdd*1.5));
 
 
 
                         double angle=MinecraftClient.getInstance().player.headYaw%360;
-
+                        
                         direction directions = null;
 
                     if(angle<0)
                     {
                         angle=angle+360;
                     }
-                    System.out.println(angle);
+                   // System.out.println(angle);
                         if(angle>270)
                         {
-                            System.out.println(angle+"s");
+                            //System.out.println(angle+"s");
                             if(xdd>=0&&zdd<=0)
                             {
                                 directions= direction.LEFT;
@@ -153,7 +173,7 @@ public class KeyInputHandler {
                         }
                         else if(180<angle && angle<=270)
                         {
-                            System.out.println(xdd+" "+zdd);
+
                             if(xdd<=0&&zdd<=0)
                             {
                                 directions= direction.LEFT;
@@ -163,28 +183,63 @@ public class KeyInputHandler {
                                 directions=direction.RIGHT;
                             }
                         }
-
+                   // System.out.println(xdd*1.5+" "+zdd*1.5+" "+angle);
+                       // System.out.println(sqrt(pow(xdd*1.5,2)+pow(zdd*1.5,2))+" s");
                         //ClientPlayNetworking.send(ModMessages.WAVING,);
                     //System.out.println(direction);
                     String animationss;
-                    if(directions==null)
-                    {
-                        System.out.println("s");
-                        directions=direction.LEFT;
+                        double alpha_todegree=alpha*360/(2*PI);
 
+                    if(abs(alpha_todegree-angle)<=10)
+                    {
+                        System.out.println("forward");
+                        directions=direction.FORWARD;
+
+                    }
+                    if(abs(abs(alpha_todegree-angle)-180)<=10)
+                    {
+                        System.out.println("backward");
+                        directions=direction.BACKWARD;
                     }
                     if(directions==direction.LEFT)
                     {
-                        KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, "dashing"));
-                        animationss="dashing";
+                       // KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, "dashing_left"));
+                        animationss="dashing_left";
+                    }
+                    else if(directions==direction.FORWARD)
+                    {
+                       // KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, "dashing_left"));
+                        if(!right_arm)
+                        {
+                            animationss="dashing_forward_leftleg";
+                        }
+                        else
+                        {
+                            animationss="dashing_forward_rightleg";
+                        }
+
+                    }
+                    else if(directions==direction.BACKWARD)
+                    {
+                        // KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, "dashing_left"));
+                        if(!right_arm)
+                        {
+                            animationss="dashing_backward_leftleg";
+                        }
+                        else
+                        {
+                            animationss="dashing_backward_rightleg";
+                        }
+
                     }
                     else
                     {
-                        KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, "dashing_right"));
+                       // KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, "dashing_right"));
                         animationss="dashing_right";
                     }
 
-                    if(xdd!=0 && zdd!=0)
+
+                    if(MinecraftClient.getInstance().player.getVelocity().getX()!=0)
                     {
                         System.out.println(directions.getint());
                         ClientPlayNetworking.send(
@@ -192,6 +247,8 @@ public class KeyInputHandler {
                                 new Packets.DashAnimation(MinecraftClient.getInstance().player.getId(), animationss, directions.getint(),1).write());
 
                     }
+
+                    System.out.println(angle+" angle "+xfinal+" xdd2 "+ zfinal+" zdd2 "+xfinal/zfinal);
 
 
                     ClientPlayNetworking.send(ModMessages.DASH,buf);

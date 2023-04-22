@@ -4,8 +4,8 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"1": "kav_soul_like:block/fire",
-		"particle": "kav_soul_like:block/golden_cup",
-		"1_0": "kav_soul_like:block/golden_cup"
+		"particle": "kav_soul_like:block/golden_cup_kav",
+		"1_0": "kav_soul_like:block/golden_cup_kav"
 	},
 	"elements": [
 		{

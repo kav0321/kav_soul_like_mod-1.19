@@ -78,7 +78,7 @@ public class ModMessages
 
     public static Boolean t=false;
     public static Boolean t2=false;
-
+    public static Boolean t1=false;
     public static void registerC2SPackets()
         {
         ServerPlayNetworking.registerGlobalReceiver(HANDSWING, PlayerStatsC2S::sendstats);
@@ -173,7 +173,10 @@ public class ModMessages
             ModConfigs.Kh=packets1.Kh();
             ModConfigs.Mh=packets1.Mh();
             ModConfigs.Lh=packets1.Lh();
-           // System.out.println(ModConfigs.Kh+" "+ModConfigs.Mh+" "+ModConfigs.Lh);
+            StaminaData.addPoints(((IEntityDataSaver) MinecraftClient.getInstance().player), 1f, "Stamina");
+            //System.out.println( StaminaData.addPoints(((IEntityDataSaver) MinecraftClient.getInstance().player), 0f, "Stamina"));
+
+            // System.out.println(ModConfigs.Kh+" "+ModConfigs.Mh+" "+ModConfigs.Lh);
         });
         ClientPlayNetworking.registerGlobalReceiver(Packets.level_up_maths_agility.ID, (client, handler, buf, sender) -> {
             final var packets2 = Packets.level_up_maths_agility.read(buf);
@@ -245,7 +248,7 @@ public class ModMessages
                     SpeedModifier speedModifier= new SpeedModifier();
                     if(t==false)
                     {
-                        speedModifier.speed=4;
+                        speedModifier.speed=1.2f;
                         t=true;
                     }
 
@@ -264,9 +267,10 @@ public class ModMessages
             final var packet = Packets.DashAnimation.read(buf);
             client.execute(() -> {
                 var entity = client.world.getEntityById(packet.playerId());
+               // System.out.println(packet.direction() +" rs ");System.out.println(packet.direction() +" rs ");
                 if (entity instanceof PlayerEntity) {
 
-
+                    //System.out.println(packet.direction() +" rs ");
                     if(packet.direction()== direction.LEFT.getint())
                     {
                         var animationContainer = ((IExampleAnimatedPlayer) entity).modid_getModAnimation();
@@ -277,35 +281,26 @@ public class ModMessages
 
                         var builder = animationL.mutableCopy();
                         var part = builder.getPart("head");
+                        var part2 = builder.getPart("leftArm");
+                        var part3 = builder.getPart("rightArm");
                         part.setEnabled(false);
-
+                        //part2.setEnabled(false);
+                       // part3.setEnabled(false);
 
 
                         animationL = builder.build();
-
-                        TransmissionSpeedModifier speedS= new TransmissionSpeedModifier();
-                        if(t==true)
-                        {
-                            speedS.speed=1;
-                        }
-
-                        if(t==false)
-                        {
-                            speedS.speed=1f;
-                            t=true;
-                        }
 
 
 
 
                         animationContainer.setAnimation(new KeyframeAnimationPlayer(animationL));
-                        animationContainer.addModifier(speedS,0);
+
 
                     }
                     else if(packet.direction()==direction.RIGHT.getint())
                     {
-                        var animationContainer2 = ((IExampleAnimatedPlayer) entity).modid_getModAnimation();
-                        System.out.println(packet.direction());
+                        var animationContainer22 = ((IExampleAnimatedPlayer) entity).modid_getModAnimation();
+                       // System.out.println(packet.direction() +" r ");
                         KeyframeAnimation animation =  PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, "dashing_right"));
                         KeyframeAnimation nulls =  PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, "null"));
                         ModifierLayer base = new ModifierLayer(null);
@@ -323,29 +318,22 @@ public class ModMessages
 
 
                         TransmissionSpeedModifier speedSS= new TransmissionSpeedModifier();
-                        if(t2==true)
-                        {
-                            speedSS.speed=1;
-                        }
-
-                        if(t2==false)
-                        {
-                            speedSS.speed=0.8f;
-                            t2=true;
-                        }
 
 
 
-                        animationContainer2.setAnimation(new KeyframeAnimationPlayer(animation));
 
-                        animationContainer2.addModifier(speedSS,0);
+                        //speedSS.speed=0.5f;
+
+                        animationContainer22.setAnimation(new KeyframeAnimationPlayer(animation));
+
+                        animationContainer22.addModifier(speedSS,0);
 
 
                     }
                     else
                     {
                         var animationContainer2 = ((IExampleAnimatedPlayer) entity).modid_getModAnimation();
-                        System.out.println(packet.direction()+"s "+ packet.animationName());
+                        //System.out.println(packet.direction()+" s  "+ packet.animationName());
                         KeyframeAnimation animation =  PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, packet.animationName()));
                         KeyframeAnimation nulls =  PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, "null"));
                         ModifierLayer base = new ModifierLayer(null);
@@ -362,23 +350,16 @@ public class ModMessages
 
 
 
-                        TransmissionSpeedModifier speedSS= new TransmissionSpeedModifier();
-                        if(t2==true)
-                        {
-                            speedSS.speed=1;
-                        }
+                        TransmissionSpeedModifier speedSsS= new TransmissionSpeedModifier();
 
-                        if(t2==false)
-                        {
-                            speedSS.speed=0.8f;
-                            t2=true;
-                        }
+
+                       //speedSsS.speed=5.5f;
 
 
 
                         animationContainer2.setAnimation(new KeyframeAnimationPlayer(animation));
 
-                        animationContainer2.addModifier(speedSS,0);
+                        animationContainer2.addModifier(speedSsS,0);
 
                     }
 

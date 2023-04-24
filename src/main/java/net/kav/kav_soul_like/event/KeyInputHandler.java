@@ -20,6 +20,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
+import static java.lang.Float.NaN;
 import static java.lang.Math.*;
 
 public class KeyInputHandler {
@@ -190,13 +191,13 @@ public class KeyInputHandler {
                     String animationss;
                         double alpha_todegree=alpha*360/(2*PI);
 
-                    if(abs(alpha_todegree-angle)<=10)
+                    if(abs(alpha_todegree-angle)<=20)
                     {
                         System.out.println("forward");
                         directions=direction.FORWARD;
 
                     }
-                    if(abs(abs(alpha_todegree-angle)-180)<=10)
+                    if(abs(abs(alpha_todegree-angle)-180)<=20)
                     {
                         System.out.println("backward");
                         directions=direction.BACKWARD;
@@ -209,14 +210,9 @@ public class KeyInputHandler {
                     else if(directions==direction.FORWARD)
                     {
                        // KeyframeAnimation animation = PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, "dashing_left"));
-                        if(!right_arm)
-                        {
-                            animationss="dashing_forward_leftleg";
-                        }
-                        else
-                        {
-                            animationss="dashing_forward_rightleg";
-                        }
+
+                            animationss="dashing_forward";
+
 
                     }
                     else if(directions==direction.BACKWARD)
@@ -239,7 +235,7 @@ public class KeyInputHandler {
                     }
 
 
-                    if(MinecraftClient.getInstance().player.getVelocity().getX()!=0)
+                    if(xfinal/zfinal!=NaN)
                     {
                         System.out.println(directions.getint());
                         ClientPlayNetworking.send(

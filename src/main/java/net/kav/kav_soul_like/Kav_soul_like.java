@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.kav.kav_soul_like.Items.ModItems;
 import net.kav.kav_soul_like.block.ModBlocks;
+import net.kav.kav_soul_like.block.entity.ModBlockEntities;
 import net.kav.kav_soul_like.command.Levelsetcommand;
 import net.kav.kav_soul_like.config.ModConfigs;
 import net.kav.kav_soul_like.event.Servertick;
@@ -28,6 +29,7 @@ public class Kav_soul_like implements ModInitializer {
 		ModBlocks.registerModBlocks();
 		ModItems.registerModItems();
 		ModRegistries.INIT();
+		ModBlockEntities.registerBlockEntities();
 		JsonReader.init();
 		ServerLivingEntityEvents.ALLOW_DAMAGE.register(new entityattack());
 		// This code runs as soon as Minecraft is in a mod-load-ready state.

@@ -7,6 +7,7 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
+
 	maven {
 		name "KosmX's maven"
 		url 'https://maven.kosmx.dev/'
@@ -16,6 +17,8 @@ repositories {
 		name = "CottonMC"
 		url = "https://server.bbkr.space/artifactory/libs-release"
 	}
+	maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+
 
 	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because
@@ -33,7 +36,7 @@ dependencies {
 	modImplementation include("io.github.cottonmc:LibGui:6.4.0+1.19")
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
+	modImplementation 'software.bernie.geckolib:geckolib-fabric-1.19:3.1.40'
 	// Uncomment the following line to enable the deprecated Fabric API modules. 
 	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.
 

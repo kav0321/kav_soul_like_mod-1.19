@@ -1,10 +1,22 @@
 {
-  "block.kav_soul_like.golden_cup": "Golden Cup",
+  "block.kav_soul_like.statue_kav": "Petrify Girl",
   "item.kav_soul_like.echo_star": "Echo Star",
   "key.kav_soul_like.dash": "Dashing",
   "key.category.kav_soul_like.category": "Kav Soul Like Mod",
   "key.kav_soul_like.direction_w": "Forward Direction",
   "key.kav_soul_like.direction_d": "Right Direction",
   "key.kav_soul_like.direction_a": "Left Direction",
-  "key.kav_soul_like.direction_s": "Backward Direction"
+  "key.kav_soul_like.direction_s": "Backward Direction",
+  "kav_soul_like.hello": "Hello ",
+  "kav_soul_like.someone": "Is anybody here?",
+  "kav_soul_like.someone_2": "I can hear some footstep",
+  "kav_soul_like.help": "I am the statue right near you",
+  "kav_soul_like.help_2": "I was petrified and I can't move anymore. I need your help",
+  "kav_soul_like.plead": "Please don't mine me, I will die",
+  "kav_soul_like.stop": "Stop this, this is not funny",
+  "kav_soul_like.angry" : "Stop this now or I swear to god I will find my way to hunt you to eternity",
+  "kav_soul_like.very_angry" : "Now you have done it, I will reincarnate and hunt you down when I come back",
+  "kav_soul_like.item_needed": "Mining me will kill me, so you will a petrify item called Ohara root",
+  "kav_soul_like.where_item": "You will find those items by either killing Oharian people or negociate with them.",
+  "kav_soul_like.where_item_2": "They look like little mushroom people"
 }

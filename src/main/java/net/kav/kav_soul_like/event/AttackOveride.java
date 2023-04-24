@@ -17,10 +17,11 @@ public class AttackOveride {
     public static void print()
     {
 
-        if(!MinecraftClient.getInstance().player.isCreative())
+        if(!(MinecraftClient.getInstance().player.isCreative()||MinecraftClient.getInstance().player.isSpectator()))
         {
             con=true;
             //CLIENT TO SERVER
+
             ClientPlayNetworking.send(ModMessages.HANDSWING, PacketByteBufs.empty());
 
             String name= Registry.ITEM.getId(MinecraftClient.getInstance().player.getMainHandStack().getItem()).toString();

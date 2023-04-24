@@ -36,7 +36,8 @@ public class ClientStamina implements ClientTickEvents.EndWorldTick{
 
         }
 
-        if (MinecraftClient.getInstance().player.handSwinging == false && x1==9&& MinecraftClient.getInstance().player.isSprinting()==false&&AttackOveride.getCon()==false &&!dashingkey.isPressed() && !MinecraftClient.getInstance().player.isBlocking() && !MinecraftClient.getInstance().player.isUsingItem()) {
+           // System.out.println(!MinecraftClient.getInstance().player.isSprinting() &&!AttackOveride.getCon() &&!dashingkey.isPressed() && !MinecraftClient.getInstance().player.isBlocking() && !MinecraftClient.getInstance().player.isUsingItem());
+        if ( x1==9&& !MinecraftClient.getInstance().player.isSprinting() &&!AttackOveride.getCon() &&!dashingkey.isPressed() && !MinecraftClient.getInstance().player.isBlocking() && !MinecraftClient.getInstance().player.isUsingItem()) {
 
            float re=StaminaData.recoveryratetag(((IEntityDataSaver) MinecraftClient.getInstance().player));
 

@@ -1,10 +1,10 @@
 {
   "category": "armor",
-  "name": "minecraft:diamond_boots",
+  "name": "minecraft:elytra",
   "strength": 0,
   "health": 0,
-  "agility": 0,
+  "agility": 32,
   "stamina": 0,
-  "defence": 8,
+  "defence": 0,
   "magic": 0
 }

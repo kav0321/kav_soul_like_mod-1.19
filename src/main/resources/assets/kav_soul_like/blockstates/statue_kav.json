@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "kav_soul_like:block/statue_kav"
+    },
+    "facing=south": {
+      "model": "kav_soul_like:block/statue_kav",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "kav_soul_like:block/statue_kav",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "kav_soul_like:block/statue_kav",
+      "y": 90
+    }
+  }
+}

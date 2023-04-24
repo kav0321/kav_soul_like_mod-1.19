@@ -25,26 +25,30 @@ public class useitem {
     @Inject(at = @At(value = "HEAD"), method = "doItemUse()V",cancellable = true)
     public void useitemblock(CallbackInfo info)
     {
-        ItemStack itemStack = MinecraftClient.getInstance().player.getOffHandStack();
-        ItemStack itemStackmain = MinecraftClient.getInstance().player.getMainHandStack();
-        String item= Registry.ITEM.getId(itemStack.getItem()).toString();
-        String itemmain= Registry.ITEM.getId(itemStackmain.getItem()).toString();
-
-        if(!stats(item,MinecraftClient.getInstance().player, weapon_req.shield))
+        if(!(MinecraftClient.getInstance().player.isCreative()||MinecraftClient.getInstance().player.isSpectator()))
         {
-           // System.out.println("asd");
-            StaminaData.removePoints(((IEntityDataSaver) MinecraftClient.getInstance().player),10,"Stamina");
+            ItemStack itemStack = MinecraftClient.getInstance().player.getOffHandStack();
+            ItemStack itemStackmain = MinecraftClient.getInstance().player.getMainHandStack();
+            String item= Registry.ITEM.getId(itemStack.getItem()).toString();
+            String itemmain= Registry.ITEM.getId(itemStackmain.getItem()).toString();
 
-        }
-        if(!stats(itemmain,MinecraftClient.getInstance().player, weapon_req.weapon))
-        {
-            //System.out.println("sasasd");
-            info.cancel();
+            if(!stats(item,MinecraftClient.getInstance().player, weapon_req.shield))
+            {
+                // System.out.println("asd");
+                StaminaData.removePoints(((IEntityDataSaver) MinecraftClient.getInstance().player),10,"Stamina");
 
-        } else if (itemStackmain.getItem() instanceof BowItem || itemStackmain.getItem() instanceof CrossbowItem) {
-            int index= Search.search( weapon_req.weapon,itemmain);
-            StaminaData.removePoints(((IEntityDataSaver) MinecraftClient.getInstance().player), (float) (weapon_req.weapon.get(index).AGILITY+weapon_req.weapon.get(index).STRENGTH),"Stamina");
+            }
+            if(!stats(itemmain,MinecraftClient.getInstance().player, weapon_req.weapon))
+            {
+                //System.out.println("sasasd");
+                info.cancel();
+
+            } else if (itemStackmain.getItem() instanceof BowItem || itemStackmain.getItem() instanceof CrossbowItem) {
+                int index= Search.search( weapon_req.weapon,itemmain);
+                StaminaData.removePoints(((IEntityDataSaver) MinecraftClient.getInstance().player), (float) (weapon_req.weapon.get(index).AGILITY+weapon_req.weapon.get(index).STRENGTH),"Stamina");
+            }
         }
+
 
     }
     public boolean stats(String string, PlayerEntity player, ArrayList<combat_stats_req> arr)

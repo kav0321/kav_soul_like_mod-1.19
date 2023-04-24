@@ -5,6 +5,8 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.kav.kav_soul_like.networking.ModMessages;
+import net.kav.kav_soul_like.util.IEntityDataSaver;
+import net.kav.kav_soul_like.util.StaminaData;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
@@ -42,6 +44,7 @@ public class serverjoin implements ClientPlayConnectionEvents.Join {
 
 
         ClientPlayNetworking.send(ModMessages.INIT,bufmS);
+
 
     }
 }

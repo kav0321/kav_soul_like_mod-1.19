@@ -3,18 +3,27 @@ package net.kav.kav_soul_like.networking;
 import com.google.common.collect.Iterables;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
+import dev.kosmx.playerAnim.api.layered.modifier.AbstractFadeModifier;
 import dev.kosmx.playerAnim.api.layered.modifier.MirrorModifier;
 import dev.kosmx.playerAnim.api.layered.modifier.SpeedModifier;
 import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
+import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.kav.kav_soul_like.Kav_soul_like;
+import net.kav.kav_soul_like.TechnicAttacks.TechnicManager;
+
+import net.kav.kav_soul_like.client.gui.GemInfusingScreen;
+import net.kav.kav_soul_like.client.gui.GemInfusingScreenHandler;
 import net.kav.kav_soul_like.client.gui.LevelUpGui;
 import net.kav.kav_soul_like.client.gui.LevelUpScreen;
 import net.kav.kav_soul_like.config.ModConfigs;
+import net.kav.kav_soul_like.entity.ModEntities;
+import net.kav.kav_soul_like.entity.custom.melina_entity;
+import net.kav.kav_soul_like.event.AttackOveride;
 import net.kav.kav_soul_like.event.ClientStamina;
 import net.kav.kav_soul_like.networking.packet.Packets;
 import net.kav.kav_soul_like.networking.packet.PlayerStatsC2S;
@@ -24,17 +33,34 @@ import net.kav.kav_soul_like.util.*;
 
 import net.kav.kav_soul_like.util.item_requirement.weapon_req;
 import net.kav.kav_soul_like.util.modifier.TransmissionSpeedModifier;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonSerializing;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import software.bernie.shadowed.eliotlash.mclib.math.functions.classic.Mod;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
+import static net.kav.kav_soul_like.event.KeyInputHandler.dashingkey;
 
 public class ModMessages
 {
@@ -76,9 +102,24 @@ public class ModMessages
     public static final Identifier ITEM = new Identifier(Kav_soul_like.MOD_ID,"items");
     public static final Identifier SHIELD = new Identifier(Kav_soul_like.MOD_ID,"shield");
 
+    public static final Identifier target = new Identifier(Kav_soul_like.MOD_ID,"target");
+    public static final Identifier screen = new Identifier(Kav_soul_like.MOD_ID,"screen");
+    public static final Identifier id = new Identifier(Kav_soul_like.MOD_ID,"id_mob");
+
+    public static final Identifier sync = new Identifier(Kav_soul_like.MOD_ID,"sync");
+    public static final Identifier abilities = new Identifier(Kav_soul_like.MOD_ID,"abilities");
+    public static final Identifier guiis = new Identifier(Kav_soul_like.MOD_ID,"guiis");
+
+    public static final Identifier effect_stamina = new Identifier(Kav_soul_like.MOD_ID,"effect_stamina");
+    public static final Identifier MODSLOTS = new Identifier(Kav_soul_like.MOD_ID,"modslot");
+    public static boolean modified=false;
     public static Boolean t=false;
     public static Boolean t2=false;
     public static Boolean t1=false;
+    public static List<LivingEntity> getEntitiesNearby(double radius, Predicate<LivingEntity> filter, World world, Box box, Entity entity)
+    {
+        return world.getEntitiesByClass(LivingEntity.class, box.expand(radius), filter.and(e -> e != entity));
+    }
     public static void registerC2SPackets()
         {
         ServerPlayNetworking.registerGlobalReceiver(HANDSWING, PlayerStatsC2S::sendstats);
@@ -99,8 +140,25 @@ public class ModMessages
         ServerPlayNetworking.registerGlobalReceiver(DASH, playertechServerSide::Dash);
         ServerPlayNetworking.registerGlobalReceiver(TEST, PlayerStatsC2S::stattest);
 
+            ServerPlayNetworking.registerGlobalReceiver(ModMessages.screen, (server, player, handler, buf, responseSender) -> {
 
-            ServerPlayNetworking.registerGlobalReceiver(Packets.TechicAnimation.ID, (server, player, handler, buf, responseSender) -> {
+                screennbt.setScreen((IEntityDataSaver) player,buf.readBoolean());
+                    });
+            ServerPlayNetworking.registerGlobalReceiver(ModMessages.id, (server, player, handler, buf, responseSender) -> {
+                for (LivingEntity entity : getEntitiesNearby(55, e -> (e instanceof melina_entity),player.getWorld(),player.getBoundingBox(),player))
+                {
+
+                   if(entity.getId()==screennbt.getid((IEntityDataSaver) player))
+                   {
+                       if(entity instanceof melina_entity)
+                       {
+                           ((melina_entity) entity).customer=null;
+                       }
+                   }
+                }
+            });
+
+            ServerPlayNetworking.registerGlobalReceiver(Packets.TechicAni.ID, (server, player, handler, buf, responseSender) -> {
                 //System.out.println("s");
                 ServerWorld world = Iterables.tryFind(server.getWorlds(), (element) -> element == player.world)
                         .orNull();
@@ -109,13 +167,16 @@ public class ModMessages
                     return;
                 }
 
-                final var packet = Packets.TechicAnimation.read(buf);
+                final var packet = Packets.TechicAni.read(buf);
 
-                final var forwardBuffer = new Packets.TechicAnimation(player.getId(), packet.animationName());
 
+
+                final var forwardBuffer = new Packets.TechicAni(player.getId(), packet.index());
+                TechnicManager.Techics.get(packet.index()).ServerSideExecution(server,player);
                 for(PlayerEntity player1: server.getPlayerManager().getPlayerList())
                 {
-                    ServerPlayNetworking.send((ServerPlayerEntity) player1, Packets.TechicAnimation.ID, forwardBuffer.write());
+
+                    ServerPlayNetworking.send((ServerPlayerEntity) player1, Packets.TechicAni.ID, forwardBuffer.write());
 
                 }
 
@@ -146,11 +207,99 @@ public class ModMessages
             });
 
 
+            ServerPlayNetworking.registerGlobalReceiver(ModMessages.guiis, (server, player, handler, buf, responseSender) -> {
+                ScreenHandler currentScreenHandler = player.playerScreenHandler;
+                GemInfusingScreenHandler customScreenHandler = new GemInfusingScreenHandler(currentScreenHandler.syncId, player.getInventory());
+                // Replace 0 with an appropriate syncId
+                GemInfusingScreen customScreen = new GemInfusingScreen(customScreenHandler, player.getInventory(), Text.of("Custom GUI"));
+
+                player.openHandledScreen(customScreen);
+
+            });
 
 
     }
+    static int x1 = 0;
     public static void registerS2CPackets()
     {
+        ClientPlayNetworking.registerGlobalReceiver(ModMessages.MODSLOTS, (client, handler, buffer, responseSender) -> {
+            int[] bufferArray = buffer.readIntArray();
+            int entityId = bufferArray[0];
+            int slot = bufferArray[1];
+            ItemStack itemStack = buffer.readItemStack();
+            client.execute(() -> {
+                if (client.player.world.getEntityById(entityId) != null) {
+                    PlayerEntity player = (PlayerEntity) client.player.world.getEntityById(entityId);
+                    player.getInventory().setStack(slot, itemStack.copy());
+                }
+            });
+        });
+
+
+        ClientPlayNetworking.registerGlobalReceiver(ModMessages.sync, (client,handler,buf, respondSender) ->{
+            final var packet = Packets.sync.read(buf);
+            Vec3d playerPos = client.player.getPos();
+            Vec3d playerpos2 = new Vec3d(packet.x(), packet.y(), packet.z());
+
+            // Calculate the direction vector from the player to the entity
+            Vec3d direction = playerpos2.subtract(playerPos).normalize();
+            client.player.sendMessage(Text.literal("s"),true);
+            // Apply the push force to the entity
+           client.player.addVelocity(direction.x * 5, direction.y * 5, direction.z * 5);
+
+
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(Packets.TechicAni.ID,(client, handler, buf, respondSender) -> {
+            final var packet = Packets.TechicAni.read(buf);
+            client.execute(() -> {
+                var entity = client.world.getEntityById(packet.playerId());
+
+                var animationContainer = ((IExampleAnimatedPlayer) entity).modid_getModAnimation();
+                KeyframeAnimation animationL =  PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, TechnicManager.Techics.get(packet.index()).getName()));
+                var builder = animationL.mutableCopy();
+
+
+                animationL = builder.build();
+
+
+
+
+                animationContainer.setAnimation(new KeyframeAnimationPlayer(animationL));
+                    });
+
+
+        });
+
+
+        ClientPlayNetworking.registerGlobalReceiver(effect_stamina, (client, handler, buf, sender) -> {
+            if(client.player!=null)
+            {
+                x1++;
+                if (x1 >= 5) {
+                    x1 = 0;
+
+                }
+                if ( x1==4&& !MinecraftClient.getInstance().player.isSprinting() &&!AttackOveride.getCon() &&!dashingkey.isPressed() && !MinecraftClient.getInstance().player.isBlocking() && !MinecraftClient.getInstance().player.isUsingItem())
+                    {
+                        float re=StaminaData.recoveryratetag(((IEntityDataSaver) client.player));
+
+                        float x122=    StaminaData.addPoints(((IEntityDataSaver) client.player), re+0.3f+buf.readFloat(), "Stamina");
+                    }
+
+
+            }
+
+        });
+        ClientPlayNetworking.registerGlobalReceiver(screen, (client, handler, buf, sender) -> {
+            screennbt.setScreen((IEntityDataSaver) client.player,buf.readBoolean());
+
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(target, (client, handler, buf, sender) -> {
+
+
+        });
 
         ClientPlayNetworking.registerGlobalReceiver(SHIELD, (client, handler, buf, sender) -> {
 
@@ -205,7 +354,7 @@ public class ModMessages
 
         ClientPlayNetworking.registerGlobalReceiver(ITEM, (client, handler, buf, sender) -> {
             final var packet = Packets.Stats_item.read(buf);
-            System.out.println(packet.name());
+
            weapon_req.add(packet.name(),packet.cat(),packet.str(),packet.health(),packet.agility(),packet.stamina(),packet.defence(),packet.magic());
         });
         ClientPlayNetworking.registerGlobalReceiver(Packets.Stats.ID, (client, handler, buf, respondSender) ->
@@ -222,45 +371,8 @@ public class ModMessages
 
 
         //codes provides by better combat with some modification
-        ClientPlayNetworking.registerGlobalReceiver(Packets.TechicAnimation.ID, (client, handler, buf, respondSender) ->
-        {
-
-            final var packet = Packets.TechicAnimation.read(buf);
-            client.execute(() -> {
-                var entity = client.world.getEntityById(packet.playerId());
-                if (entity instanceof PlayerEntity) {
-                    var animationContainer = ((IExampleAnimatedPlayer) entity).modid_getModAnimation();
-                    KeyframeAnimation animation =  PlayerAnimationRegistry.getAnimation(new Identifier(Kav_soul_like.MOD_ID, packet.animationName()));
 
 
-                    ModifierLayer base = new ModifierLayer(null);
-
-
-
-                    var builder = animation.mutableCopy();
-                    var part = builder.getPart("leftLeg");
-                    part.setEnabled(false);
-
-
-
-                    animation = builder.build();
-
-                    SpeedModifier speedModifier= new SpeedModifier();
-                    if(t==false)
-                    {
-                        speedModifier.speed=1.2f;
-                        t=true;
-                    }
-
-                    animationContainer.setAnimation(new KeyframeAnimationPlayer(animation));
-                    animationContainer.addModifier(speedModifier,0);
-
-
-
-                }
-            });
-
-        });
         ClientPlayNetworking.registerGlobalReceiver(Packets.DashAnimation.ID, (client, handler, buf, respondSender) ->
         {
 
@@ -375,11 +487,17 @@ public class ModMessages
 
         });
 
+        ClientPlayNetworking.registerGlobalReceiver(id, (client, handler, buf, respondSender) ->
+        {
 
+            screennbt.setid((IEntityDataSaver) client.player,buf.readInt());
+
+
+        });
 
         ClientPlayNetworking.registerGlobalReceiver(MAXSTAMINA, (client, handler, buf, respondSender) ->
         {
-            //System.out.println("s");
+
             StaminaData.floatsetmax(((IEntityDataSaver) client.player),buf.readFloat());
 
 
@@ -410,6 +528,7 @@ public class ModMessages
         ClientPlayNetworking.registerGlobalReceiver(STAMINALC, (client, handler, buf, respondSender) ->
         {
             StaminaLevelData.setStaminaL(((IEntityDataSaver) client.player),buf.readInt());
+
         });
 
 

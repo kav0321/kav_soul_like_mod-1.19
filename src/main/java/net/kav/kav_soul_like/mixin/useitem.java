@@ -53,11 +53,11 @@ public class useitem {
     }
     public boolean stats(String string, PlayerEntity player, ArrayList<combat_stats_req> arr)
     {
-        System.out.println(string+"sa");
+
         int index= Search.search(arr,string);
         if(index!=-1)
         {
-            System.out.println(index+"sa");
+
             if(StrengthData.getstrength(((IEntityDataSaver) player))>=arr.get(index).STRENGTH && HeartData.getHeart(((IEntityDataSaver) player))>=arr.get(index).HEART && AgilityData.getAgility(((IEntityDataSaver) player))>=arr.get(index).AGILITY && StaminaLevelData.getStaminaL(((IEntityDataSaver) player))>=arr.get(index).STAMINA && DefenceData.getDefence(((IEntityDataSaver) player))>=arr.get(index).DEFENCE)
             {
                 return true;

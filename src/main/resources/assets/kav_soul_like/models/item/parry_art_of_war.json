@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "kav_soul_like:item/parry_art_of_war"
+  }
+}

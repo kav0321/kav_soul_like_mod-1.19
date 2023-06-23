@@ -104,7 +104,7 @@ public abstract class Armorequip {
 
     public boolean stats(String string, PlayerEntity player, ArrayList<combat_stats_req> arr)
     {
-        System.out.println(string+"sa");
+
         int index= Search.search(arr,string);
         if(index!=-1)
         {

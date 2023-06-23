@@ -55,7 +55,7 @@ public class playerdeath implements ServerPlayerEvents.AfterRespawn{
         bufagilityD.writeInt(agility);
         bufstaminaD.writeInt(staminal);
         bufDefenceD.writeInt(Defence);
-        bufmax.writeFloat(maxstamina);
+
         bufLevelondeeznutz.writeInt(level);
 
 
@@ -83,7 +83,10 @@ public class playerdeath implements ServerPlayerEvents.AfterRespawn{
         ServerPlayNetworking.send(newPlayer,ModMessages.AGILITYC,bufagilityD);
         ServerPlayNetworking.send(newPlayer,ModMessages.STAMINALC,bufstaminaD);
         ServerPlayNetworking.send(newPlayer,ModMessages.DEFENCEC,bufDefenceD);
+
+        bufmax.writeFloat(((IEntityDataSaver) oldPlayer).getPersistentData().getFloat("MaxStamina"));
         ServerPlayNetworking.send(newPlayer,ModMessages.MAXSTAMINA,bufmax);
+
         ServerPlayNetworking.send(newPlayer,ModMessages.LEVELC,bufLevelondeeznutz);
     }
 }

@@ -1,6 +1,7 @@
 package net.kav.kav_soul_like.networking.packet;
 
 import com.google.common.collect.Multimap;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -70,6 +71,7 @@ public class PlayerStatsC2S
     }
     public static void INIT(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
     {
+
 
         PacketByteBuf bufx= PacketByteBufs.create();
         PacketByteBuf bufy= PacketByteBufs.create();
@@ -154,14 +156,18 @@ public class PlayerStatsC2S
 
     public static void getlowsta(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
     {
-      if(buf.readBoolean())
-      {
-          player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,20,2));
-          player.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE,20,2));
-      }
+        if(!player.isCreative())
+        {
+            if(buf.readBoolean())
+            {
+                player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,20,2));
+                player.addStatusEffect(new StatusEffectInstance(StatusEffects.MINING_FATIGUE,20,2));
+            }
 
 
-        player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,20,10));
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS,20,10));
+        }
+
     }
     public static void getMaxSta(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
     {

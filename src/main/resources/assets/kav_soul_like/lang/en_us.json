@@ -3,10 +3,7 @@
   "item.kav_soul_like.echo_star": "Echo Star",
   "key.kav_soul_like.dash": "Dashing",
   "key.category.kav_soul_like.category": "Kav Soul Like Mod",
-  "key.kav_soul_like.direction_w": "Forward Direction",
-  "key.kav_soul_like.direction_d": "Right Direction",
-  "key.kav_soul_like.direction_a": "Left Direction",
-  "key.kav_soul_like.direction_s": "Backward Direction",
+
   "kav_soul_like.hello": "Hello ",
   "kav_soul_like.someone": "Is anybody here?",
   "kav_soul_like.someone_2": "I can hear some footstep",
@@ -18,5 +15,15 @@
   "kav_soul_like.very_angry" : "Now you have done it, I will reincarnate and hunt you down when I come back",
   "kav_soul_like.item_needed": "Mining me will kill me, so you will a petrify item called Ohara root",
   "kav_soul_like.where_item": "You will find those items by either killing Oharian people or negociate with them.",
-  "kav_soul_like.where_item_2": "They look like little mushroom people"
+  "kav_soul_like.where_item_2": "They look like little mushroom people",
+  "kav_soul_like.thx": "Thank young one, I am forever in your debt",
+  "kav_soul_like.service": "I can offer some of my service here",
+  "kav_soul_like.stuck": "I was trick by an old man where he petrified me",
+  "item.kav_soul_like.honey_fruit_punch": "Honey Fruit Punch",
+  "key.kav_soul_like.TECH": " Action Key",
+
+  "item.kav_soul_like.grab_art_of_war": "Grab Art of War",
+  "item.kav_soul_like.smash_art_of_war": "Smash Art of War",
+  "item.kav_soul_like.parry_art_of_war": "Parry Art of War",
+  "item.kav_soul_like.kick_art_of_war": "Kick Art of War"
 }

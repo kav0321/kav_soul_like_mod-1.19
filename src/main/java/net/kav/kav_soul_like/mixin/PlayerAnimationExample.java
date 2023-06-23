@@ -44,9 +44,7 @@ public class PlayerAnimationExample {
 
 
                 //ClientPlayNetworking.send(ModMessages.WAVING,);
-                ClientPlayNetworking.send(
-                        Packets.TechicAnimation.ID,
-                        new Packets.TechicAnimation(MinecraftClient.getInstance().player.getId(), "waving").write());
+
 
                 //Use animationContainer.replaceAnimationWithFade(); to create fading effects instead of sudden changes.
             }

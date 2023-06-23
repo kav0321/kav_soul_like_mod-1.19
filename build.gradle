@@ -7,7 +7,14 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
-
+	maven {
+		name = "TerraformersMC"
+		url = "https://maven.terraformersmc.com/"
+	}
+	maven {
+		name = "Ladysnake Libs"
+		url = "https://ladysnake.jfrog.io/artifactory/mods"
+	}
 	maven {
 		name "KosmX's maven"
 		url 'https://maven.kosmx.dev/'
@@ -28,6 +35,7 @@ repositories {
 }
 
 dependencies {
+	modImplementation "dev.emi:trinkets:${trinkets_version}"
 	include modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:1.0.2")
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"

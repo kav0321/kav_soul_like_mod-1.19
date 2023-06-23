@@ -2,6 +2,7 @@ package net.kav.kav_soul_like.block;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.kav.kav_soul_like.Items.ModItemGroup;
 import net.kav.kav_soul_like.Kav_soul_like;
 import net.kav.kav_soul_like.block.custom.statue_kav;
 import net.minecraft.block.Block;
@@ -19,7 +20,7 @@ import java.util.function.ToIntFunction;
 public class ModBlocks {
 
     public static final Block GOLDEN_CUP = registerBlock("statue_kav",
-                new statue_kav(FabricBlockSettings.of(Material.STONE).strength(4f).requiresTool().nonOpaque().ticksRandomly()), ItemGroup.MISC);
+                new statue_kav(FabricBlockSettings.of(Material.STONE).strength(4f).requiresTool().nonOpaque().ticksRandomly()), ModItemGroup.KAV_SOUL_MONSTER);
 
 
     private static Block registerBlockWithoutItem(String name, Block block) {

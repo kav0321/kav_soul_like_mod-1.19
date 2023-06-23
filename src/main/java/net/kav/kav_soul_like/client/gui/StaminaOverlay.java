@@ -76,7 +76,7 @@ public class StaminaOverlay
     private void StaminaBar(MatrixStack matrixStack,float tickDelta,MinecraftClient client, int x, int y)
     {
         float stamina = StaminaData.addPoints(((IEntityDataSaver) MinecraftClient.getInstance().player), 0, "Stamina");
-        float maximumsta =StaminaData.addPoints(((IEntityDataSaver) MinecraftClient.getInstance().player),0,"MaxStamina");
+        float maximumsta =((IEntityDataSaver) client.player).getPersistentData().getFloat("MaxStamina");
 
         if(!(client.player.isCreative())&&!(client.player.isSpectator()) && !client.player.hasVehicle())
         {

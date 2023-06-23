@@ -3,7 +3,7 @@
   "type": "minecraft:jigsaw",
 
   // the path to the template pool json file to use
-  "start_pool": "kav_soul_like:kav_ruin_castle/start_pool",
+  "start_pool": "kav_soul_like:lost_statue/start_pool",
 
   // This is how many pieces away from the starting piece a piece of the structure can spawn
   // Think of it like the length of the branch of the structure
@@ -13,7 +13,7 @@
   "max_distance_from_center": 10,
 
   // The biome tag to use for what biomes that this structure can spawn in"
-  "biomes": "#kav_soul_like:has_structure/kav_ruin_castle",
+  "biomes": "#kav_soul_like:has_structure/lost_statue",
 
   // The generation step for when to generate the structure. there are 10 stages you can pick from!
   // This surface structure stage places the structure before plants and ores are generated
@@ -25,7 +25,7 @@
   // If project_start_to_heightmap is present, the y value chosen in start_height will be added to the terrain's y value.
   // So a start height that gives -5 will sink the structure 5 blocks into the terrain. Here, we will spawn this structure 60 blocks above the terrain.
   "start_height": {
-    "absolute": -1
+    "absolute": 1
   },
 
   // Makes our sky fan structure take the terrain's top y value and add it to the start_height y value above.

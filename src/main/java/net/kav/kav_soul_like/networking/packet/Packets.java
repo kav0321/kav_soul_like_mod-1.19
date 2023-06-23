@@ -9,24 +9,83 @@ import net.minecraft.util.Identifier;
 import java.util.List;
 //credit to better combat
 public class Packets {
+    public record sync(double x,double y, double z) {
 
-        public record TechicAnimation(int playerId,String animationName) {
+
+        public PacketByteBuf write() {
+            PacketByteBuf buffer = PacketByteBufs.create();
+            buffer.writeDouble(x);
+            buffer.writeDouble(y);
+            buffer.writeDouble(z);
+
+            return buffer;
+        }
+
+        public static sync read(PacketByteBuf buffer) {
+            double x = buffer.readDouble();
+            double y = buffer.readDouble();
+            double z = buffer.readDouble();
+
+            return new sync(x,y,z);
+        }
+    }
+    public record entity(int id,boolean target) {
+
+
+        public PacketByteBuf write() {
+            PacketByteBuf buffer = PacketByteBufs.create();
+            buffer.writeInt(id);
+
+            buffer.writeBoolean(target);
+
+            return buffer;
+        }
+
+        public static entity read(PacketByteBuf buffer) {
+            int id = buffer.readInt();
+
+            boolean target = buffer.readBoolean();
+
+            return new entity(id,target);
+        }
+    }
+    public record TechicAni(int playerId,int index) {
+        public static Identifier ID = new Identifier(Kav_soul_like.MOD_ID, "attack_animation");
+
+
+
+
+
+        public PacketByteBuf write() {
+            PacketByteBuf buffer = PacketByteBufs.create();
+            buffer.writeInt(playerId);
+
+            buffer.writeInt(index);
+
+            return buffer;
+        }
+
+        public static TechicAni read(PacketByteBuf buffer) {
+            int playerId = buffer.readInt();
+
+            int index = buffer.readInt();
+
+            return new TechicAni(playerId,index);
+        }
+    }
+        public record TechicAnimation(int playerId,String animationName,int speed) {
             public static Identifier ID = new Identifier(Kav_soul_like.MOD_ID, "attack_animation");
 
-            public static String StopSymbol = "!STOP!";
 
 
 
-            public static TechicAnimation stop(int playerId) {
-                return new TechicAnimation(playerId, StopSymbol);
-            }
 
             public PacketByteBuf write() {
                 PacketByteBuf buffer = PacketByteBufs.create();
                 buffer.writeInt(playerId);
 
                 buffer.writeString(animationName);
-
+                buffer.writeInt(speed);
                 return buffer;
             }
 
@@ -34,8 +93,8 @@ public class Packets {
                 int playerId = buffer.readInt();
 
                 String animationName = buffer.readString();
-
-                return new TechicAnimation(playerId,animationName);
+                int speed= buffer.readInt();
+                return new TechicAnimation(playerId,animationName,speed);
             }
         }
 

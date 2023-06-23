@@ -1,12 +1,10 @@
 package net.kav.kav_soul_like.event;
 
-import dev.kosmx.playerAnim.core.data.KeyframeAnimation;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.kav.kav_soul_like.Kav_soul_like;
+import net.kav.kav_soul_like.TechnicAttacks.TechnicManager;
 import net.kav.kav_soul_like.networking.ModMessages;
 import net.kav.kav_soul_like.networking.packet.Packets;
 import net.kav.kav_soul_like.networking.packet.direction;
@@ -16,9 +14,9 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Arm;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
+import software.bernie.shadowed.eliotlash.mclib.math.functions.limit.Min;
 
 import static java.lang.Float.NaN;
 import static java.lang.Math.*;
@@ -29,16 +27,17 @@ public class KeyInputHandler {
 
 
     public static final String KEY_DASH = "key.kav_soul_like.dash";
-    public static final String KEY_DASH_DIRECTION_A = "key.kav_soul_like.direction_a";
-    public static final String KEY_DASH_DIRECTION_D = "key.kav_soul_like.direction_d";
-    public static final String KEY_DASH_DIRECTION_S = "key.kav_soul_like.direction_s";
-    public static final String KEY_DASH_DIRECTION_W = "key.kav_soul_like.direction_w";
-    public static KeyBinding dashingkey;
+    public static final String TECH = "key.kav_soul_like.TECH";
 
+    public static KeyBinding test;
+    public static KeyBinding dashingkey;
+    public static KeyBinding aglet;
     private static int tick=20;
     private static boolean right_arm;
     public static void registerKeyInputs(){
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+
+
         tick--;
         if(tick <=0)
         {
@@ -46,14 +45,22 @@ public class KeyInputHandler {
         }
             if(client.player!=null)
             {
-
+                if(test.isPressed())
+                {
+                    ClientPlayNetworking.send(ModMessages.guiis,PacketByteBufs.empty());
+                   // MinecraftClient.getInstance().setScreen(new abilityscreen(new abilitiesgui()));
+                }
 
                 if(dashingkey.isPressed() && ((tick==0 && StaminaData.addPoints(((IEntityDataSaver) MinecraftClient.getInstance().player), 0, "Stamina")>1))){
-                if(MinecraftClient.getInstance().player.getMainArm()== Arm.RIGHT)
+                    if(!MinecraftClient.getInstance().player.isOnGround())
+                    {
+                        return;
+                    }
+                    if(MinecraftClient.getInstance().player.getMainArm()== Arm.RIGHT)
                 {
                     right_arm=true;
                 }
-                    System.out.println(MinecraftClient.getInstance().player.getVelocity().getY());
+
                     if(pow(pow(MinecraftClient.getInstance().player.getVelocity().x,2)+pow(MinecraftClient.getInstance().player.getVelocity().y,2)+pow(MinecraftClient.getInstance().player.getVelocity().z,2),0.5)>=0.1 && !MinecraftClient.getInstance().player.isCreative())
                     {
                         StaminaData.removePoints(((IEntityDataSaver) MinecraftClient.getInstance().player), 8, "Stamina");
@@ -193,13 +200,13 @@ public class KeyInputHandler {
 
                     if(abs(alpha_todegree-angle)<=20)
                     {
-                        System.out.println("forward");
+
                         directions=direction.FORWARD;
 
                     }
                     if(abs(abs(alpha_todegree-angle)-180)<=20)
                     {
-                        System.out.println("backward");
+
                         directions=direction.BACKWARD;
                     }
                     if(directions==direction.LEFT)
@@ -237,20 +244,50 @@ public class KeyInputHandler {
 
                     if(xfinal/zfinal!=NaN)
                     {
-                        System.out.println(directions.getint());
+
                         ClientPlayNetworking.send(
                                 Packets.DashAnimation.ID,
                                 new Packets.DashAnimation(MinecraftClient.getInstance().player.getId(), animationss, directions.getint(),1).write());
 
                     }
 
-                    System.out.println(angle+" angle "+xfinal+" xdd2 "+ zfinal+" zdd2 "+xfinal/zfinal);
+
 
 
                     ClientPlayNetworking.send(ModMessages.DASH,buf);
                     tick=10;
 
                 }
+                if(aglet.isPressed())
+                {
+                    if(!(((IEntityDataSaver) MinecraftClient.getInstance().player).getPersistentData().contains("glove") &&playerabilities.getability(((IEntityDataSaver) MinecraftClient.getInstance().player),"glove")!=-1))
+                    {
+                        return;
+                    }
+
+                    int index = playerabilities.getability(((IEntityDataSaver) client.player),"glove");
+                        System.out.println(index);
+                    if(ClientStamina.getTick==-1)
+                    {
+                        ClientStamina.getTick=TechnicManager.Techics.get(index).cooldown;
+                    }
+
+                    if(ClientStamina.getTick<=0)
+                    {
+
+                        ClientStamina.getTick=-1;
+
+                        ClientPlayNetworking.send(
+                                Packets.TechicAni.ID,
+                                new Packets.TechicAni(MinecraftClient.getInstance().player.getId(), index).write());
+                        TechnicManager.Techics.get(index).staminaconsume();
+                    }
+
+
+                }
+
+
+
 
             }
 
@@ -275,6 +312,18 @@ public class KeyInputHandler {
         ));
 
 
+        aglet = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                TECH,
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_C,
+                KEY_CATEGORY_KAV_SOUL
+        ));
+        test = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "test",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_V,
+                KEY_CATEGORY_KAV_SOUL
+        ));
 
         registerKeyInputs();
 

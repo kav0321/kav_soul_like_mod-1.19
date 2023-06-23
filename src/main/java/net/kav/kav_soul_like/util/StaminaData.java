@@ -47,9 +47,19 @@ public class StaminaData {
 
         switch (string) {
             case "Stamina":
+                if(amount!=0)
+                {
 
+                }
+                if(MAXSTAMINA==0)
+                {
+                    MAXSTAMINA=20;
+                    (player).getPersistentData().putFloat("MaxStamina",20);
+                }
                 if (STAMINA >= MAXSTAMINA) {
+
                     STAMINA = MAXSTAMINA;
+
                 }
                 else {
 
@@ -74,7 +84,7 @@ public class StaminaData {
                     if(MAXSTAMINA%5==0 && amount!=0)
                     {
 
-                        RECOVERYRATE+=0.1;
+                        RECOVERYRATE=MAXSTAMINA/100+0.1f;
                     }
 
                     MAXSTAMINA = MAXSTAMINA + amount;}
@@ -91,12 +101,20 @@ public class StaminaData {
     public static float recoveryratetag(IEntityDataSaver player)
     {
         NbtCompound nbt = player.getPersistentData();
+        MAXSTAMINA=nbt.getFloat("MaxStamina");
         RECOVERYRATE=nbt.getFloat("recoveryrate");
+
         if(RECOVERYRATE==0)
         {
             RECOVERYRATE=0.7f;
             nbt.putFloat("recoveryrate",RECOVERYRATE);
         }
+        else
+        {
+            RECOVERYRATE=MAXSTAMINA/100+0.1f;
+        }
+
+
         return RECOVERYRATE;
     }
     public static float recoveryratetagput(IEntityDataSaver player, float amount)

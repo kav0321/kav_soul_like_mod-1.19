@@ -4,17 +4,20 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.kav.kav_soul_like.Items.ModItems;
+import net.kav.kav_soul_like.TechnicAttacks.TechnicManager;
 import net.kav.kav_soul_like.block.ModBlocks;
+import net.kav.kav_soul_like.block.entity.ImplementedInventory;
 import net.kav.kav_soul_like.block.entity.ModBlockEntities;
-import net.kav.kav_soul_like.command.Levelsetcommand;
+import net.kav.kav_soul_like.client.ModScreenHandlers;
 import net.kav.kav_soul_like.config.ModConfigs;
+import net.kav.kav_soul_like.entity.ModEntities;
 import net.kav.kav_soul_like.event.Servertick;
 import net.kav.kav_soul_like.event.entityattack;
 import net.kav.kav_soul_like.event.playerdeath;
 import net.kav.kav_soul_like.json_reader.JsonReader;
 import net.kav.kav_soul_like.networking.ModMessages;
+import net.kav.kav_soul_like.statusEffect.ModStatusEffects;
 import net.kav.kav_soul_like.util.ModRegistries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +32,7 @@ public class Kav_soul_like implements ModInitializer {
 		ModBlocks.registerModBlocks();
 		ModItems.registerModItems();
 		ModRegistries.INIT();
+		TechnicManager.INITTECHNIC();
 		ModBlockEntities.registerBlockEntities();
 		JsonReader.init();
 		ServerLivingEntityEvents.ALLOW_DAMAGE.register(new entityattack());
@@ -36,8 +40,13 @@ public class Kav_soul_like implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 		ModMessages.registerC2SPackets();
+
+		ModEntities.registerEntityserver();
+
 		ServerPlayerEvents.AFTER_RESPAWN.register(new playerdeath());
 		ServerTickEvents.END_WORLD_TICK.register(new Servertick());
+		ModScreenHandlers.registerAllScreenHandlers();
+		ModStatusEffects.registerEffects();
 		LOGGER.info("Hello Fabric world!");
 	}
 }

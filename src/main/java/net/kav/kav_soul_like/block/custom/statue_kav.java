@@ -2,6 +2,8 @@ package net.kav.kav_soul_like.block.custom;
 
 import net.kav.kav_soul_like.block.entity.ModBlockEntities;
 import net.kav.kav_soul_like.block.entity.statue_kav_entity;
+import net.kav.kav_soul_like.entity.ModEntities;
+import net.kav.kav_soul_like.entity.custom.melina_entity;
 import net.kav.kav_soul_like.util.DisplayLevel;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -32,6 +34,7 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
@@ -52,7 +55,7 @@ import static java.lang.Math.sqrt;
 
 public class statue_kav extends BlockWithEntity implements  BlockEntityProvider  {
 
-
+    public static final DirectionProperty FACING= Properties.HORIZONTAL_FACING;
     public static final BooleanProperty LIT = Properties.LIT;
     private final int fireDamage=15;
     private final boolean emitsParticles;
@@ -104,15 +107,46 @@ public class statue_kav extends BlockWithEntity implements  BlockEntityProvider 
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getStackInHand(hand);
 
-       /* if(world.isClient)
-        {
-            DisplayLevel.Gui();
-        }*/
 
-        if(!world.isClient)
-        {
-            mood(world,pos,state,state.get(MOOD),player);
-        }
+
+
+            if(itemStack.getItem()==Items.DIAMOND)
+            {
+                world.removeBlock(pos,false);
+                this.spawnBreakParticles(world,player,pos,state);
+                melina_entity melina= new melina_entity(ModEntities.DOROTHY_ENTITY_ENTITY_TYPE,world);
+                itemStack.setCount(itemStack.getCount()-1);
+                if(state.get(FACING)== Direction.NORTH)
+                {
+                    melina.refreshPositionAndAngles(pos,0,360);
+                    world.spawnEntity(melina);
+                }
+                else if(state.get(FACING)== Direction.SOUTH)
+                {
+                    melina.refreshPositionAndAngles(pos,180f,360);
+                    world.spawnEntity(melina);
+
+                }
+                else if(state.get(FACING)== Direction.EAST)
+                {
+                    melina.refreshPositionAndAngles(pos,-90f,0);
+                    world.spawnEntity(melina);
+
+                }
+                else
+                {
+                    melina.refreshPositionAndAngles(pos,270,0);
+                    world.spawnEntity(melina);
+                }
+
+
+            }
+            else
+            {
+                mood(world,pos,state,state.get(MOOD),player);
+            }
+
+
         return ActionResult.success(world.isClient);
     }
     @Override
@@ -169,7 +203,7 @@ public class statue_kav extends BlockWithEntity implements  BlockEntityProvider 
         }
        else if(moods==6)
         {
-            System.out.println("asa");
+
             world.setBlockState(pos,((BlockState)state.with(MOOD,moods+1)), Block.NOTIFY_ALL);
         }
        else if(moods==7)
@@ -190,7 +224,7 @@ public class statue_kav extends BlockWithEntity implements  BlockEntityProvider 
        // world.playSound(null, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, SoundEvents.BLOCK_RESPAWN_ANCHOR_CHARGE, SoundCategory.BLOCKS, 1.0f, 1.0f);
     }
 //
-    public static final DirectionProperty FACING= Properties.HORIZONTAL_FACING;
+
 
 
     private static VoxelShape SHAPE=Block.createCuboidShape(0,0,0,16,4,16);
@@ -243,15 +277,15 @@ public class statue_kav extends BlockWithEntity implements  BlockEntityProvider 
     @Override
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         //super.scheduledTick(state,world,pos,random);
-        System.out.println("saaaa");
+
         if(!world.isClient)
-        { System.out.println("saaa");
+        {
             for(ServerPlayerEntity player: world.getServer().getPlayerManager().getPlayerList())
-            { System.out.println("saa");
+            {
 
                 if(sqrt((pow(player.getPos().x-pos.getX(),2))+(pow(player.getPos().y-pos.getY(),2))+(pow(player.getPos().z-pos.getZ(),2)))<=10)
                 {
-                    System.out.println(state.get(MOOD));
+
                     if(state.get(MOOD)>=0 && state.get(MOOD)<=3)
                     {
                         mood(world,pos,state,state.get(MOOD),player);
